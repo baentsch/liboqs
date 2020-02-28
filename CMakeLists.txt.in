@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.6)
+project(cpu_features-download NONE)
+
+include(ExternalProject)
+ExternalProject_Add(cpu_features
+    GIT_REPOSITORY https://github.com/google/cpu_features.git
+    GIT_TAG master
+    SOURCE_DIR "${CMAKE_BINARY_DIR}/cpu_features-src"
+    BINARY_DIR "${CMAKE_BINARY_DIR}/cpu_features-build"
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+    TEST_COMMAND ""
+    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/cpu_features
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+)
+ExternalProject_Get_Property(cpu_features install_dir)
+include_directories(${install_dir}/include)
+
+#add_dependencies(oqs cpu_features)
+#target_link_libraries(project_b_exe ${install_dir}/lib/alib.lib)

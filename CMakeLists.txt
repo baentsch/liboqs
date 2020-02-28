@@ -4,6 +4,20 @@ project(liboqs C ASM)
 set(OQS_VERSION_TEXT "0.2.1-dev")
 set(OQS_COMPILE_BUILD_TARGET "${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_HOST_SYSTEM}")
 
+# Download and unpack cpu_features at configure time
+configure_file(CMakeLists.txt.in cpu_features-download/CMakeLists.txt)
+execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/cpu_features-download"
+)
+execute_process(COMMAND "${CMAKE_COMMAND}" --build .
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/cpu_features-download"
+)
+
+add_subdirectory("${CMAKE_BINARY_DIR}/cpu_features-src"
+                 "${CMAKE_BINARY_DIR}/cpu_features-build"
+)
+
+
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
    CMAKE_SYSTEM_PROCESSOR STREQUAL "amd64")
     set(ARCH "x86_64")
@@ -125,6 +139,15 @@ configure_file(src/oqsconfig.h.cmake ${PROJECT_BINARY_DIR}/include/oqs/oqsconfig
 set(PUBLIC_HEADERS ${PUBLIC_HEADERS} ${PROJECT_BINARY_DIR}/include/oqs/oqsconfig.h)
 
 include_directories(${PROJECT_BINARY_DIR}/include)
+include_directories(${CMAKE_BINARY_DIR}/cpu_features-src/include)
+
+# I don't like hardcoding this, but it seems the only way...
+link_libraries(${CMAKE_BINARY_DIR}/cpu_features-build/libcpu_features.a)
+
+# Would be sensible but can't get it to work:
+#add_dependencies(oqs cpu_features)
+#target_link_libraries(oqs ${CMAKE_BINARY_DIR}/cpu_features-build)
+
 add_subdirectory(src)
 
 add_subdirectory(tests)

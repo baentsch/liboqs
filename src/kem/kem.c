@@ -8,6 +8,20 @@
 
 #include <oqs/oqs.h>
 
+#include "cpu_features_macros.h"
+
+#if defined(CPU_FEATURES_ARCH_X86)
+#include "cpuinfo_x86.h"
+#elif defined(CPU_FEATURES_ARCH_ARM)
+#include "cpuinfo_arm.h"
+#elif defined(CPU_FEATURES_ARCH_AARCH64)
+#include "cpuinfo_aarch64.h"
+#elif defined(CPU_FEATURES_ARCH_MIPS)
+#include "cpuinfo_mips.h"
+#elif defined(CPU_FEATURES_ARCH_PPC)
+#include "cpuinfo_ppc.h"
+#endif
+
 OQS_API const char *OQS_KEM_alg_identifier(size_t i) {
 	// EDIT-WHEN-ADDING-KEM
 	const char *a[OQS_KEM_algs_length] = {
@@ -77,6 +91,13 @@ OQS_API int OQS_KEM_alg_count() {
 }
 
 OQS_API int OQS_KEM_alg_is_enabled(const char *method_name) {
+	  X86Features features = GetX86Info().features;
+  	bool has_avx2 = CPU_FEATURES_COMPILED_X86_AVX2 && features.avx2;
+  	if (has_avx2) {
+          printf("Can do AVX2.\n");
+  	} else {
+          printf("Better run non-AVX2 code.\n");
+  	}
 	if (method_name == NULL) {
 		return 0;
 	}
