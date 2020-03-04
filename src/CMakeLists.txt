@@ -1,5 +1,6 @@
 add_subdirectory(common)
 add_subdirectory(crypto)
+add_subdirectory(cpu_features)
 
 if(OQS_ENABLE_KEM_BIKE)
     add_subdirectory(kem/bike)
@@ -69,6 +70,7 @@ add_library(oqs kem/kem.c
 if(OQS_USE_OPENSSL)
     target_link_libraries(oqs ${OPENSSL_CRYPTO_LIBRARY})
 endif()
+target_link_libraries(oqs cpu_features)
 
 set_target_properties(oqs
     PROPERTIES
