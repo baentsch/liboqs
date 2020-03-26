@@ -1,4 +1,7 @@
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.2.0
 
 # CircleCI doesn't handle large file sets properly for local builds
 # https://github.com/CircleCI-Public/circleci-cli/issues/281#issuecomment-472808051
@@ -164,9 +167,8 @@ jobs:
         - store_artifacts:
             path: build/test-results
   win:
-    machine:
-      image: windows-default # Windows machine image
-    resource_class: windows.medium
+    executor:
+      name: win/default
     environment:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
@@ -213,7 +215,7 @@ workflows:
       #- centos-8-amd64
       #- debian-buster-amd64
       #- macOS
-      #- ubuntu-bionic-x86_64-gcc7
+      - ubuntu-bionic-x86_64-gcc7
       #- ubuntu-bionic-x86_64-gcc7-noopenssl
       #- ubuntu-bionic-x86_64-gcc7-shared
   nightly:
