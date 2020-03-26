@@ -186,7 +186,7 @@ jobs:
            command: echo "PATH=/c/Users/circleci/project/cmake/bin:$PATH" > ~/.bashrc
            shell: bash.exe
         - run:
-           command: pwd && cat ~/.bashrc && cmake
+           command: ls -laR /c/Users/circleci/project/cmake/bin && source ~/.bashrc && cmake
            shell: bash.exe
         - run:
             name: Install dependencies
