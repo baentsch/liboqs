@@ -183,10 +183,7 @@ jobs:
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip -Method Get -OutFile ninja.zip; Expand-Archive ninja.zip 
            shell: powershell.exe
         - run:
-           command: ls -laR 
-           shell: bash.exe
-        - run:
-           command: echo "PATH=\"/c/Users/circleci/project/cmake/cmake-3.17.0-win64-x64/bin:$PATH\"" > ~/.bashrc
+           command: echo "PATH=\"/c/Users/circleci/project/cmake/cmake-3.17.0-win64-x64/bin:/c/Users/circleci/project/ninja:$PATH\"" > ~/.bashrc
            shell: bash.exe
         - run:
             name: Install dependencies
