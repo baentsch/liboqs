@@ -183,15 +183,6 @@ jobs:
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip -Method Get -OutFile ninja.zip; Expand-Archive ninja.zip 
            shell: powershell.exe
         - run:
-           command: echo $env:path; dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build"
-           shell: powershell.exe
-        - run:
-           command: $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"
-           shell: powershell.exe
-        - run:
-           command: echo "PATH=\"/c/Users/circleci/project/cmake/cmake-3.17.0-win64-x64/bin:/c/Users/circleci/project/ninja:$PATH\"" > ~/.bashrc
-           shell: bash.exe
-        - run:
             name: Install dependencies
             command: |
               scripts/git_no_checkin_in_last_day.sh || (
@@ -199,13 +190,8 @@ jobs:
               )
             shell: bash.exe
         - run:
-            name: Configure
-            command: mkdir build & cd build & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" & PATH=%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin & cmake -GNinja ${CONFIGURE_ARGS} ..
-            shell: cmd.exe
-        - run:
-            name: Build
-            command: PATH=%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin & ninja
-            working_directory: build
+            name: Configure & Build
+            command: mkdir build & cd build & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" & PATH="%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin" & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
             shell: cmd.exe
         - run:
             name: Run tests
