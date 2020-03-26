@@ -178,15 +178,12 @@ jobs:
            name: Install cmake
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip
            shell: powershell.exe
-        - run:
-           command: pwd && ls -laR 
-           shell: bash.exe
         - run:            
            name: Install cmake (2)
            command: $ProgressPreference='SilentlyContinue' ; Expand-Archive cmake.zip
            shell: powershell.exe
         - run:
-           command: echo "PATH=/c/Users/circleci/project/cmake/bin:$PATH" > ~/.bashrc
+           command: echo "PATH=/c/Users/circleci/project/cmake/cmake-3.17.0-win64-x64/bin:$PATH" > ~/.bashrc
            shell: bash.exe
         - run:
            command: ls -laR /c/Users/circleci/project/cmake && source ~/.bashrc && cmake
