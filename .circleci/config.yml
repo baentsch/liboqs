@@ -173,7 +173,7 @@ jobs:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
     steps:
-        #- checkout
+        - checkout
         - run:            
            name: Install cmake
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip
