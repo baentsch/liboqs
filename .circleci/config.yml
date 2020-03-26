@@ -191,7 +191,7 @@ jobs:
             shell: bash.exe
         - run:
             name: Configure & Build
-            command: echo %PATH% & mkdir build & cd build & "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Auxiliary/Build/vcvars64.bat" & PATH="%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin" & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
+            command: echo %PATH% & mkdir build & cd build & "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Auxiliary/Build/vcvars64.bat" & PATH="%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin" & echo %PATH% & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
             shell: cmd.exe
         - run:
             name: Run tests
