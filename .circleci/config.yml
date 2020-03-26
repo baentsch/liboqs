@@ -176,6 +176,10 @@ jobs:
         #- checkout
         - run:
            name: Set VCVars
+           command: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+           shell: cmd.exe
+        - run:
+           name: Set VCVars
            command: cd "C:\Program Files (x86)" & dir
            shell: cmd.exe
         - run:
@@ -189,10 +193,6 @@ jobs:
         - run:
            name: Set VCVars
            command: call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"
-           shell: cmd.exe
-        - run:
-           name: Set VCVars
-           command: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
            shell: cmd.exe
         - run:            
            name: Install cmake
