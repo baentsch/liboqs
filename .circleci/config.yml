@@ -180,7 +180,7 @@ jobs:
            shell: powershell.exe
         - run:            
            name: Install cmake (2)
-           command: ($ProgressPreference='SilentlyContinue') -or (Expand-Archive cmake.zip)
+           command: $ProgressPreference='SilentlyContinue' ; Expand-Archive cmake.zip
            shell: powershell.exe
         - run:
            command: ls -l
