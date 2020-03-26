@@ -183,7 +183,7 @@ jobs:
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip -Method Get -OutFile ninja.zip; Expand-Archive ninja.zip 
            shell: powershell.exe
         - run:
-           command: echo $env:path
+           command: echo $env:path; dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build"
            shell: powershell.exe
         - run:
            command: $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"
@@ -200,7 +200,7 @@ jobs:
             shell: bash.exe
         - run:
             name: Configure
-            command: mkdir build ; cd build ; CALL "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" ; cmake -GNinja ${CONFIGURE_ARGS} ..
+            command: mkdir build ; cd build ; "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" ; cmake -GNinja ${CONFIGURE_ARGS} ..
             shell: powershell.exe
         - run:
             name: Build
