@@ -173,7 +173,7 @@ jobs:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
     steps:
-        #- checkout
+        - checkout
         - run:            
            name: Install cmake
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip; Expand-Archive cmake.zip 
@@ -209,7 +209,7 @@ jobs:
             shell: bash.exe
         - run:
             name: Run tests
-            command: ../scripts/git_no_checkin_in_last_day.sh || ninja run_tests
+            command: ninja run_tests
             working_directory: build
             shell: bash.exe
         - store_test_results: # Note that this command will fail when running CircleCI locally, that is expected behaviour
