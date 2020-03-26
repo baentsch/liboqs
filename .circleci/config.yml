@@ -200,13 +200,13 @@ jobs:
             shell: bash.exe
         - run:
             name: Configure
-            command: mkdir build ; cd build ; "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" ; $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"; cmake -GNinja ${CONFIGURE_ARGS} ..
-            shell: powershell.exe
+            command: mkdir build & cd build & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" & PATH=%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin & cmake -GNinja ${CONFIGURE_ARGS} ..
+            shell: cmd.exe
         - run:
             name: Build
-            command: $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"; ninja
+            command: PATH=%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin & ninja
             working_directory: build
-            shell: powershell.exe
+            shell: cmd.exe
         - run:
             name: Run tests
             command: $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"; ninja run_tests
