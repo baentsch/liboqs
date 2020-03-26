@@ -173,7 +173,7 @@ jobs:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
     steps:
-        - checkout
+        #- checkout
         - run:            
            name: Install cmake
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip; Expand-Archive cmake.zip 
@@ -181,6 +181,12 @@ jobs:
         - run:            
            name: Install ninja
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip -Method Get -OutFile ninja.zip; Expand-Archive ninja.zip 
+           shell: powershell.exe
+        - run:
+           command: pwd ; dir
+           shell: powershell.exe
+        - run:
+           command: $env:Path += ";SomeRandomPath"
            shell: powershell.exe
         - run:
            command: echo "PATH=\"/c/Users/circleci/project/cmake/cmake-3.17.0-win64-x64/bin:/c/Users/circleci/project/ninja:$PATH\"" > ~/.bashrc
@@ -194,11 +200,11 @@ jobs:
             shell: bash.exe
         - run:
             name: Configure
-            command: scripts/git_no_checkin_in_last_day.sh || (mkdir build && cd build && source ~/.bashrc && cmake -GNinja ${CONFIGURE_ARGS} ..)
+            command: mkdir build && cd build && source ~/.bashrc && cmake -GNinja ${CONFIGURE_ARGS} ..
             shell: bash.exe
         - run:
             name: Build
-            command: ../scripts/git_no_checkin_in_last_day.sh || source ~/.bashrc && ninja
+            command: ninja
             working_directory: build
             shell: bash.exe
         - run:
