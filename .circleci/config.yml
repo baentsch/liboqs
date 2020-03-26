@@ -186,9 +186,6 @@ jobs:
            command: echo "PATH=\"/c/Users/circleci/project/cmake/cmake-3.17.0-win64-x64/bin:$PATH\"" > ~/.bashrc
            shell: bash.exe
         - run:
-           command: source ~/.bashrc && cmake
-           shell: bash.exe
-        - run:
             name: Install dependencies
             command: |
               scripts/git_no_checkin_in_last_day.sh || (
@@ -197,11 +194,11 @@ jobs:
             shell: bash.exe
         - run:
             name: Configure
-            command: scripts/git_no_checkin_in_last_day.sh || (mkdir build && cd build && cmake -GNinja ${CONFIGURE_ARGS} ..)
+            command: scripts/git_no_checkin_in_last_day.sh || (mkdir build && cd build && source ~/.bashrc && cmake ${CONFIGURE_ARGS} ..)
             shell: bash.exe
         - run:
             name: Build
-            command: ../scripts/git_no_checkin_in_last_day.sh || ninja
+            command: ../scripts/git_no_checkin_in_last_day.sh || make
             working_directory: build
             shell: bash.exe
         - run:
