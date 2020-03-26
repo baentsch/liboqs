@@ -183,7 +183,10 @@ jobs:
            command: $ProgressPreference='SilentlyContinue' ; Expand-Archive cmake.zip
            shell: powershell.exe
         - run:
-           command: ls -l && pwd && cat ~/.bashrc
+           command: echo "PATH=/c/Users/circleci/project/cmake/bin:$PATH" > ~/.bashrc
+           shell: bash.exe
+        - run:
+           command: pwd && cat ~/.bashrc && cmake
            shell: bash.exe
         - run:
             name: Install dependencies
