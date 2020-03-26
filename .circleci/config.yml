@@ -163,18 +163,59 @@ jobs:
             path: build/test-results
         - store_artifacts:
             path: build/test-results
+  win:
+    machine:
+      image: windows-default # Windows machine image
+    resource_class: windows.medium
+    environment:
+        CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
+        SKIP_TESTS: style
+    steps:
+        - checkout
+        - run:            
+           command: $(echo hello | Out-Host; $?) -and $(echo world | Out-Host; $?)
+           shell: powershell.exe
+        - run:
+           command: echo hello && echo world
+           shell: bash.exe
+        - run:
+            name: Install dependencies
+            command: |
+              scripts/git_no_checkin_in_last_day.sh || (
+              pip install pytest pytest-xdist
+              )
+            shell: bash.exe
+        - run:
+            name: Configure
+            command: scripts/git_no_checkin_in_last_day.sh || (mkdir build && cd build && cmake -GNinja ${CONFIGURE_ARGS} ..)
+            shell: bash.exe
+        - run:
+            name: Build
+            command: ../scripts/git_no_checkin_in_last_day.sh || ninja
+            working_directory: build
+            shell: bash.exe
+        - run:
+            name: Run tests
+            command: ../scripts/git_no_checkin_in_last_day.sh || ninja run_tests
+            working_directory: build
+            shell: bash.exe
+        - store_test_results: # Note that this command will fail when running CircleCI locally, that is expected behaviour
+            path: build/test-results
+        - store_artifacts:
+            path: build/test-results
 
 workflows:
   version: 2
   build:
     jobs:
-      - centos-7-amd64
-      - centos-8-amd64
-      - debian-buster-amd64
-      - macOS
-      - ubuntu-bionic-x86_64-gcc7
-      - ubuntu-bionic-x86_64-gcc7-noopenssl
-      - ubuntu-bionic-x86_64-gcc7-shared
+      - win
+      #- centos-7-amd64
+      #- centos-8-amd64
+      #- debian-buster-amd64
+      #- macOS
+      #- ubuntu-bionic-x86_64-gcc7
+      #- ubuntu-bionic-x86_64-gcc7-noopenssl
+      #- ubuntu-bionic-x86_64-gcc7-shared
   nightly:
     triggers:
       - schedule:
