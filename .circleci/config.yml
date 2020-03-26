@@ -178,7 +178,7 @@ jobs:
            name: Install cmake
            #command: ($ProgressPreference = "SilentlyContinue"; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4-win64-x64.zip)
            command: (Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4-win64-x64.zip)
-           shell: bash.exe
+           shell: powershell.exe
         - run:
            command: echo hello && echo world
            shell: bash.exe
