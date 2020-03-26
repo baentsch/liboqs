@@ -173,11 +173,12 @@ jobs:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
     steps:
-        - checkout
+        #- checkout
         - run:            
            name: Install cmake
-           command: ($ProgressPreference = "SilentlyContinue"; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4-win64-x64.zip)
-           shell: powershell.exe
+           #command: ($ProgressPreference = "SilentlyContinue"; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4-win64-x64.zip)
+           command: (Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4-win64-x64.zip)
+           shell: bash.exe
         - run:
            command: echo hello && echo world
            shell: bash.exe
