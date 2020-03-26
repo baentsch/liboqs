@@ -200,18 +200,18 @@ jobs:
             shell: bash.exe
         - run:
             name: Configure
-            command: mkdir build ; cd build ; "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" ; cmake -GNinja ${CONFIGURE_ARGS} ..
+            command: mkdir build ; cd build ; "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" ; $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"; cmake -GNinja ${CONFIGURE_ARGS} ..
             shell: powershell.exe
         - run:
             name: Build
-            command: ninja
+            command: $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"; ninja
             working_directory: build
-            shell: bash.exe
+            shell: powershell.exe
         - run:
             name: Run tests
-            command: ninja run_tests
+            command: $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"; ninja run_tests
             working_directory: build
-            shell: bash.exe
+            shell: powershell.exe
         - store_test_results: # Note that this command will fail when running CircleCI locally, that is expected behaviour
             path: build/test-results
         - store_artifacts:
