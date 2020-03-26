@@ -180,10 +180,10 @@ jobs:
            shell: powershell.exe
         - run:            
            name: Install cmake (2)
-           command: (env:ProgressPreference='SilentlyContinue' ; Expand-Archive cmake.zip)
+           command: ($ProgressPreference='SilentlyContinue') -or (Expand-Archive cmake.zip)
            shell: powershell.exe
         - run:
-           command: echo hello && echo world
+           command: ls -l
            shell: bash.exe
         - run:
             name: Install dependencies
