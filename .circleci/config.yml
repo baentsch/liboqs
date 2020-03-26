@@ -173,7 +173,11 @@ jobs:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
     steps:
-        - checkout
+        #- checkout
+        - run:
+           name: Set VCVars
+           command: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+           shell: cmd.exe
         - run:            
            name: Install cmake
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip; Expand-Archive cmake.zip 
