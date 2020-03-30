@@ -174,10 +174,6 @@ jobs:
         SKIP_TESTS: style
     steps:
         #- checkout
-        - run:
-            name: Configure & Build
-            command: call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & PATH=%PATH%;C:\Users\circleci\project\ninja & echo %PATH% & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
-            shell: cmd.exe
         #- run:            
         #   name: Install cmake
         #   command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip; Expand-Archive cmake.zip 
@@ -193,6 +189,10 @@ jobs:
               pip install pytest pytest-xdist
               )
             shell: bash.exe
+        - run:
+            name: Configure & Build
+            command: call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & PATH=%PATH%;C:\Users\circleci\project\ninja & echo %PATH% & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
+            shell: cmd.exe
         - run:
             name: Configure & Build
             command: call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & PATH=%PATH%;C:\Users\circleci\project\ninja & echo %PATH% & mkdir build & cd build & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
