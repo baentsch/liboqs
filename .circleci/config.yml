@@ -176,7 +176,7 @@ jobs:
         #- checkout
         - run:
             name: Configure & Build
-            command: call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
+            command: call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & PATH=%PATH%;C:\Users\circleci\project\ninja & echo %PATH% & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
             shell: cmd.exe
         #- run:            
         #   name: Install cmake
