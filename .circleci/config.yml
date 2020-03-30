@@ -191,15 +191,11 @@ jobs:
             shell: bash.exe
         - run:
             name: Configure & Build
-            command: call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & PATH=%PATH%;C:\Users\circleci\project\ninja & echo %PATH% & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
-            shell: cmd.exe
-        - run:
-            name: Configure & Build
             command: PATH=C:\Users\circleci\project\ninja;%PATH% & call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & mkdir build & cd build & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
             shell: cmd.exe
         - run:
             name: Run tests
-            command: PATH=%PATH%;C:\Users\circleci\project\ninja & ninja run_tests
+            command: PATH=C:\Users\circleci\project\ninja;%PATH% & ninja run_tests
             working_directory: build
             shell: cmd.exe
         - store_test_results: # Note that this command will fail when running CircleCI locally, that is expected behaviour
