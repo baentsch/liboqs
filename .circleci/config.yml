@@ -172,33 +172,8 @@ jobs:
     environment:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
-        PP: C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\
     steps:
-        #- checkout
-        - run:
-           name: Set VCVars
-           command: echo %PP%
-           shell: cmd.exe
-        - run:
-           name: Set VCVars
-           command: cd C:\PROGRA~2 & dir
-           shell: cmd.exe
-        - run:
-           name: Set VCVars
-           command: echo %PP% & call %PP%vcvars64.bat
-           shell: cmd.exe
-        - run:
-           name: Set VCVars
-           command: dir "C:\Program Files (x86)" 
-           shell: cmd.exe
-        #- run:
-        #   name: Set VCVars
-        #   command: call "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Auxiliary/Build/vcvars64.bat"
-        #   shell: cmd.exe
-        - run:
-           name: Set VCVars
-           command: call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"
-           shell: cmd.exe
+        - checkout
         - run:            
            name: Install cmake
            command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip; Expand-Archive cmake.zip 
@@ -216,15 +191,13 @@ jobs:
             shell: bash.exe
         - run:
             name: Configure & Build
-            #command: echo %PATH% & mkdir build & cd build & "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Auxiliary/Build/vcvars64.bat" & PATH=%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin & echo %PATH% & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
-            #command: mkdir build & cd build & call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" & PATH=%PATH%;C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin & cmake -GNinja %CONFIGURE_ARGS% .. & ninja
-            command: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" & PATH=%PATH%;C:\Users\circleci\project\ninja & echo %PATH% & mkdir build & cd build & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
+            command: call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & PATH=%PATH%;C:\Users\circleci\project\ninja & echo %PATH% & mkdir build & cd build & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
             shell: cmd.exe
         - run:
             name: Run tests
-            command: $env:Path += ";C:\Users\circleci\project\ninja;C:\Users\circleci\project\cmake\cmake-3.17.0-win64-x64\bin"; ninja run_tests
+            command: PATH=%PATH%;C:\Users\circleci\project\ninja & ninja run_tests
             working_directory: build
-            shell: powershell.exe
+            shell: cmd.exe
         - store_test_results: # Note that this command will fail when running CircleCI locally, that is expected behaviour
             path: build/test-results
         - store_artifacts:
