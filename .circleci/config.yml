@@ -173,7 +173,7 @@ jobs:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
     steps:
-        #- checkout
+        - checkout
         #- run:            
         #   name: Install cmake
         #   command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip; Expand-Archive cmake.zip 
@@ -195,7 +195,7 @@ jobs:
             shell: cmd.exe
         - run:
             name: Configure & Build
-            command: call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & PATH=%PATH%;C:\Users\circleci\project\ninja & echo %PATH% & mkdir build & cd build & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
+            command: PATH=C:\Users\circleci\project\ninja;%PATH% & call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & mkdir build & cd build & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
             shell: cmd.exe
         - run:
             name: Run tests
