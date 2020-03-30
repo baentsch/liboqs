@@ -172,11 +172,12 @@ jobs:
     environment:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
+        PP: "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\"
     steps:
         #- checkout
         - run:
            name: Set VCVars
-           command: DD="c:\Program Files (x86)\" & echo %DD% & cd %DD% & dir
+           command: DD="c:\Program Files (x86)\" & echo %DD% & echo %PP & cd %DD% & dir
            shell: cmd.exe
         - run:
            name: Set VCVars
@@ -184,7 +185,7 @@ jobs:
            shell: cmd.exe
         - run:
            name: Set VCVars
-           command: PP="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\" & echo %PP% & call %PP%vcvars64.bat
+           command: echo %PP% & call %PP%vcvars64.bat
            shell: cmd.exe
         - run:
            name: Set VCVars
