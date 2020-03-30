@@ -176,15 +176,15 @@ jobs:
         #- checkout
         - run:
            name: Set VCVars
-           command: set DD="c:\Program Files (x86)\" & echo %DD% & cd %DD% & dir
-           shell: cmd.exe
-        - run:
-           name: Set VCVars
-           command: set PP="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\" & echo %PP% & call %PP%vcvars64.bat
+           command: DD="c:\Program Files (x86)\" & echo %DD% & cd %DD% & dir
            shell: cmd.exe
         - run:
            name: Set VCVars
            command: cd 'C:\Program Files (x86)' & dir
+           shell: cmd.exe
+        - run:
+           name: Set VCVars
+           command: PP="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\" & echo %PP% & call %PP%vcvars64.bat
            shell: cmd.exe
         - run:
            name: Set VCVars
