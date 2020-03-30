@@ -60,6 +60,36 @@ localCheckout: &localCheckout
     - store_artifacts:
         path: build/test-results
 
+.winjob: &winjob
+    executor:
+      name: win/default
+    steps:
+        - checkout
+        - run:            
+           name: Install ninja
+           command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip -Method Get -OutFile ninja.zip; Expand-Archive ninja.zip 
+           shell: powershell.exe
+        - run:
+            name: Install dependencies
+            command: |
+              scripts/git_no_checkin_in_last_day.sh || (
+              pip install pytest pytest-xdist
+              )
+            shell: bash.exe
+        - run:
+            name: Configure & Build
+            command: PATH=C:\Users\circleci\project\ninja;%PATH% & call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & mkdir build & cd build & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
+            shell: cmd.exe
+        - run:
+            name: Run tests
+            command: PATH=C:\Users\circleci\project\ninja;%PATH% & ninja run_tests
+            working_directory: build
+            shell: cmd.exe
+        - store_test_results: # Note that this command will fail when running CircleCI locally, that is expected behaviour
+            path: build/test-results
+        - store_artifacts:
+            path: build/test-results
+
 jobs:
   centos-7-amd64:
     <<: *oqsjob
@@ -167,41 +197,10 @@ jobs:
         - store_artifacts:
             path: build/test-results
   win:
-    executor:
-      name: win/default
+    <<: *winjob
     environment:
         CONFIGURE_ARGS: -DOQS_USE_OPENSSL=OFF 
         SKIP_TESTS: style
-    steps:
-        - checkout
-        #- run:            
-        #   name: Install cmake
-        #   command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-win64-x64.zip -Method Get -OutFile cmake.zip; Expand-Archive cmake.zip 
-        #   shell: powershell.exe
-        - run:            
-           name: Install ninja
-           command: $ProgressPreference="SilentlyContinue" ; Invoke-RestMethod -Uri https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip -Method Get -OutFile ninja.zip; Expand-Archive ninja.zip 
-           shell: powershell.exe
-        - run:
-            name: Install dependencies
-            command: |
-              scripts/git_no_checkin_in_last_day.sh || (
-              pip install pytest pytest-xdist
-              )
-            shell: bash.exe
-        - run:
-            name: Configure & Build
-            command: PATH=C:\Users\circleci\project\ninja;%PATH% & call C:\PROGRA~2\MICROS~2\2019\Community\VC\Auxiliary\Build\vcvars64.bat & mkdir build & cd build & cmake -GNinja ${CONFIGURE_ARGS} .. & ninja
-            shell: cmd.exe
-        - run:
-            name: Run tests
-            command: PATH=C:\Users\circleci\project\ninja;%PATH% & ninja run_tests
-            working_directory: build
-            shell: cmd.exe
-        - store_test_results: # Note that this command will fail when running CircleCI locally, that is expected behaviour
-            path: build/test-results
-        - store_artifacts:
-            path: build/test-results
 
 workflows:
   version: 2
