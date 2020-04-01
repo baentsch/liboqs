@@ -8,6 +8,7 @@
 #include <windows.h>
 #endif
 
+#ifdef OQS_RT_DETECTION
 #include <cpu_features_macros.h>
 
 #if defined(CPU_FEATURES_ARCH_X86)
@@ -78,6 +79,11 @@ OQS_API void OQS_init(void) {
 		OQS_RT_AES_INSTRUCTIONS = 1 ;
 	}
 }
+#else /* OQS_RT_DETECTION */
+OQS_API void OQS_init(void) {
+}
+#endif /* OQS_RT_DETECTION */
+
 
 OQS_API void OQS_MEM_cleanse(void *ptr, size_t len) {
 #if defined(_WIN32)

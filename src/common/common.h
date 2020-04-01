@@ -16,6 +16,7 @@
 extern "C" {
 #endif
 
+#ifdef OQS_RT_DETECTION
 /**
  * Runtime CPU feature flag indicating AES support
  */
@@ -90,7 +91,7 @@ int OQS_RT_SSE4A_INSTRUCTIONS ;
  * Runtime CPU feature flag indicating NEON support
  */
 int OQS_RT_NEON_INSTRUCTIONS;
-
+#endif /* OQS_RT_DETECTION */
 
 /**
  * Certain functions (such as OQS_randombytes_openssl in
