@@ -46,10 +46,11 @@ OQS_API OQS_STATUS OQS_SIG_{{ family }}_{{ scheme['scheme'] }}_keypair(uint8_t *
 {% if impl['name'] != 'clean' -%}
 #if {{ impl['required_defines'] }} && defined(OQS_ENABLE_SIG_{{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }})
 #ifdef OQS_ENABLE_CPUFEATURES
-        if ({{ impl['rt_options'] }})
+	if ({{ impl['rt_options'] }}) {
 		return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ impl['name']|upper }}_crypto_sign_keypair(public_key, secret_key);
-	else
+	} else {
 		return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_CLEAN_crypto_sign_keypair(public_key, secret_key);
+	}
 #else
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ impl['name']|upper }}_crypto_sign_keypair(public_key, secret_key);
 #endif
@@ -58,9 +59,9 @@ OQS_API OQS_STATUS OQS_SIG_{{ family }}_{{ scheme['scheme'] }}_keypair(uint8_t *
 {% endif -%}
 {% if scheme['metadata']['implementations']|length > 1 -%}
 #else
-// Assume CLEAN always compiles
+	// Assume CLEAN always compiles
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_CLEAN_crypto_sign_keypair(public_key, secret_key);
-{% else -%}
+{% else %}
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ scheme['metadata']['implementations'][0]['name']|upper }}_crypto_sign_keypair(public_key, secret_key);
 {% endif -%}
 {% if scheme['metadata']['implementations']|length > 1 -%}
@@ -74,10 +75,11 @@ OQS_API OQS_STATUS OQS_SIG_{{ family }}_{{ scheme['scheme'] }}_sign(uint8_t *sig
 {% if impl['name'] != 'clean' -%}
 #if {{ impl['required_defines'] }} && defined(OQS_ENABLE_SIG_{{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }})
 #ifdef OQS_ENABLE_CPUFEATURES
-        if ({{ impl['rt_options'] }})
+	if ({{ impl['rt_options'] }}) {
 		return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ impl['name']|upper }}_crypto_sign_signature(signature, signature_len, message, message_len, secret_key);
-	else
+	} else {
 		return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_CLEAN_crypto_sign_signature(signature, signature_len, message, message_len, secret_key);
+	}
 #else
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ impl['name']|upper }}_crypto_sign_signature(signature, signature_len, message, message_len, secret_key);
 #endif
@@ -86,9 +88,9 @@ OQS_API OQS_STATUS OQS_SIG_{{ family }}_{{ scheme['scheme'] }}_sign(uint8_t *sig
 {% endif -%}
 {% if scheme['metadata']['implementations']|length > 1 -%}
 #else
-// Assume CLEAN always compiles
+	// Assume CLEAN always compiles
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_CLEAN_crypto_sign_signature(signature, signature_len, message, message_len, secret_key);
-{% else -%}
+{% else %}
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ scheme['metadata']['implementations'][0]['name']|upper }}_crypto_sign_signature(signature, signature_len, message, message_len, secret_key);
 {% endif -%}
 {% if scheme['metadata']['implementations']|length > 1 -%}
@@ -102,10 +104,11 @@ OQS_API OQS_STATUS OQS_SIG_{{ family }}_{{ scheme['scheme'] }}_verify(const uint
 {% if impl['name'] != 'clean' -%}
 #if {{ impl['required_defines'] }} && defined(OQS_ENABLE_KEM_{{ family }}_{{ scheme['scheme'] }}_{{ impl['name'] }})
 #ifdef OQS_ENABLE_CPUFEATURES
-        if ({{ impl['rt_options'] }})
+	if ({{ impl['rt_options'] }}) {
 		return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ impl['name']|upper }}_crypto_sign_verify(signature, signature_len, message, message_len, public_key);
-	else
+	} else {
 		return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_CLEAN_crypto_sign_verify(signature, signature_len, message, message_len, public_key);
+	}
 #else
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ impl['name']|upper }}_crypto_sign_verify(signature, signature_len, message, message_len, public_key);
 #endif
@@ -114,9 +117,9 @@ OQS_API OQS_STATUS OQS_SIG_{{ family }}_{{ scheme['scheme'] }}_verify(const uint
 {% endif -%}
 {% if scheme['metadata']['implementations']|length > 1 -%}
 #else
-// Assume CLEAN always compiles
+	// Assume CLEAN always compiles
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_CLEAN_crypto_sign_verify(signature, signature_len, message, message_len, public_key);
-{% else -%}
+{% else %}
 	return (OQS_STATUS) PQCLEAN_{{ scheme['pqclean_scheme_c']|upper }}_{{ scheme['metadata']['implementations'][0]['name']|upper }}_crypto_sign_verify(signature, signature_len, message, message_len, public_key);
 {% endif -%}
 {% if scheme['metadata']['implementations']|length > 1 -%}
