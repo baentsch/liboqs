@@ -130,7 +130,7 @@ for family in instructions['kems'] + instructions['sigs']:
                if (impl['name'] != 'clean'):
                    unsupported_filename = os.path.join('src', family['type'], family['name'], 'pqclean_{}_{}'.format(scheme['pqclean_scheme'].replace('-','_'), impl['name']) , 'oqs_unsupported.c')
                    with open(unsupported_filename, 'w') as gen_file:
-                       gen_file.write('int {}_{}_unsupported=1;'.format(scheme['pqclean_scheme'].replace('-','_'), impl['name']))
+                       gen_file.write('int {}_{}_unsupported=1;\n'.format(scheme['pqclean_scheme'].replace('-','_'), impl['name']))
                # also add suitable defines:
                try: 
                       defs = ""

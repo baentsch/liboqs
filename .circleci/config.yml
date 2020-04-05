@@ -17,7 +17,7 @@ localCheckout: &localCheckout
     - checkout # change this from "checkout" to "*localCheckout" when running CircleCI locally
     - run:
         name: Configure
-        command: scripts/git_no_checkin_in_last_day.sh || (mkdir build && cd build  && cmake -GNinja ${CONFIGURE_ARGS} ..)
+        command: scripts/git_no_checkin_in_last_day.sh || (source ~/.bashrc && mkdir build && cd build  && cmake -GNinja ${CONFIGURE_ARGS} ..)
     - run:
         name: Build
         command: ../scripts/git_no_checkin_in_last_day.sh || (source ~/.bashrc && ninja)
