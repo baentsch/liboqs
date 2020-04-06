@@ -24,7 +24,7 @@ def test_namespace(use_liboqs_so):
             symbols.append(line)
 
     # ideally this would be just ['oqs', 'pqclean']
-    namespaces = ['oqs', 'pqclean', 'keccak', 'aligned_alloc', 'aligned_free']
+    namespaces = ['oqs', 'pqclean', 'keccak', 'aligned_alloc', 'aligned_free', 'picnic']
     non_namespaced = []
 
     for symbolstr in symbols:
