@@ -211,12 +211,12 @@ workflows:
   version: 2
   build:
     jobs:
-      - win-static
+      - win-static:
           filters:  
             branches:
               only:  
                 - /mb-.*/
-      - win-shared
+      - win-shared:
           filters:  
             branches:
               only:  
