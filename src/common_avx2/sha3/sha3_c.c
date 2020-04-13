@@ -10,7 +10,7 @@
 
 #define SHA3_256_RATE OQS_SHA3_SHA3_256_RATE
 #ifndef OQS_USE_SHA3_OPENSSL
-#define sha3_256 OQS_SHA3_sha3_256
+#define sha3_256 OQS_AVX2_SHA3_sha3_256
 #else
 #define sha3_256 oqs_avx2_unused_SHA3_sha3_256
 #endif
@@ -26,7 +26,7 @@ typedef struct {
 
 #define SHA3_384_RATE OQS_SHA3_SHA3_384_RATE
 #ifndef OQS_USE_SHA3_OPENSSL
-#define sha3_384 OQS_SHA3_sha3_384
+#define sha3_384 OQS_AVX2_SHA3_sha3_384
 #else
 #define sha3_384 oqs_avx2_unused_SHA3_sha3_384
 #endif
@@ -42,7 +42,7 @@ typedef struct {
 
 #define SHA3_512_RATE OQS_SHA3_SHA3_512_RATE
 #ifndef OQS_USE_SHA3_OPENSSL
-#define sha3_512 OQS_SHA3_sha3_512
+#define sha3_512 OQS_AVX2_SHA3_sha3_512
 #else
 #define sha3_512 oqs_avx2_unused_SHA3_sha3_512
 #endif
@@ -58,7 +58,7 @@ typedef struct {
 
 #define SHAKE128_RATE OQS_SHA3_SHAKE128_RATE
 #ifndef OQS_USE_SHA3_OPENSSL
-#define shake128 OQS_SHA3_shake128
+#define shake128 OQS_AVX2_SHA3_shake128
 #else
 #define shake128 oqs_avx2_unused_SHA3_shake128
 #endif
@@ -83,7 +83,7 @@ typedef struct {
 
 #define SHAKE256_RATE OQS_SHA3_SHAKE256_RATE
 #ifndef OQS_USE_SHA3_OPENSSL
-#define shake256 OQS_SHA3_shake256
+#define shake256 OQS_AVX2_SHA3_shake256
 #else
 #define shake256 oqs_avx2_unused_SHA3_shake256
 #endif
