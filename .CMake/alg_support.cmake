@@ -35,6 +35,8 @@ cmake_dependent_option(OQS_ENABLE_KEM_sike_p751 "" ON "OQS_ENABLE_KEM_SIKE" OFF)
 cmake_dependent_option(OQS_ENABLE_KEM_sike_p751_compressed "" ON "OQS_ENABLE_KEM_SIKE" OFF)
 
 option(OQS_ENABLE_KEM_SIDH "" ON)
+cmake_dependent_option(OQS_ENABLE_KEM_SIDH "" ON "OQS_ENABLE_KEM_SIKE" OFF)
+
 cmake_dependent_option(OQS_ENABLE_KEM_sidh_p434 "" ON "OQS_ENABLE_KEM_SIDH" OFF)
 cmake_dependent_option(OQS_ENABLE_KEM_sidh_p434_compressed "" ON "OQS_ENABLE_KEM_SIDH" OFF)
 cmake_dependent_option(OQS_ENABLE_KEM_sidh_p503 "" ON "OQS_ENABLE_KEM_SIDH" OFF)

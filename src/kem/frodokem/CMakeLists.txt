@@ -18,5 +18,9 @@ endif()
 if(OQS_ENABLE_KEM_frodokem_1344_shake)
     set(SRCS ${SRCS} kem_frodokem1344shake.c external/frodo1344shake.c)
 endif()
+if(OQS_USE_AVX2_INSTRUCTIONS)
+    add_compile_options(-mavx2)
+endif()
+
 
 add_library(frodokem OBJECT ${SRCS})

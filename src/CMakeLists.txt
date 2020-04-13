@@ -1,5 +1,7 @@
 add_subdirectory(common)
-
+if(OQS_USE_AVX2_INSTRUCTIONS AND OQS_USE_AES_INSTRUCTIONS)
+add_subdirectory(common_avx2)
+endif()
 if(OQS_ENABLE_KEM_BIKE)
     add_subdirectory(kem/bike)
     set(KEM_OBJS ${BIKE_OBJS})
@@ -58,8 +60,10 @@ if(OQS_ENABLE_SIG_SPHINCS)
     add_subdirectory(sig/sphincs)
 endif()
 ##### OQS_COPY_FROM_PQCLEAN_FRAGMENT_ADD_ALG_OBJECTS_END
-
-add_library(oqs kem/kem.c
+add_library(d2c ALIAS dilithium_2_clean)
+message($<TARGET_OBJECTS:dilithium_2_clean>)
+add_library(oqs
+                kem/kem.c
                 ${KEM_OBJS}
                 sig/sig.c
                 ${SIG_OBJS}
@@ -160,7 +164,9 @@ $<TARGET_OBJECTS:classic_mceliece_348864_vec>
        $<TARGET_OBJECTS:sphincs_shake256_256s_robust_clean>
        $<TARGET_OBJECTS:sphincs_shake256_256s_simple_clean>
        ##### OQS_COPY_FROM_PQCLEAN_FRAGMENT_ADD_TEMPLATE_OBJECTS_END
-                $<TARGET_OBJECTS:common>)
+                $<TARGET_OBJECTS:common>
+                $<TARGET_OBJECTS:common_avx2>)
+message(oqs)
 if(DEFINED SANITIZER_LD_FLAGS)
     target_link_libraries(oqs PUBLIC ${SANITIZER_LD_FLAGS})
 endif()
