@@ -1,7 +1,5 @@
 add_subdirectory(common)
-if(OQS_USE_AVX2_INSTRUCTIONS AND OQS_USE_AES_INSTRUCTIONS)
 add_subdirectory(common_avx2)
-endif()
 if(OQS_ENABLE_KEM_BIKE)
     add_subdirectory(kem/bike)
     set(KEM_OBJS ${BIKE_OBJS})
@@ -60,8 +58,6 @@ if(OQS_ENABLE_SIG_SPHINCS)
     add_subdirectory(sig/sphincs)
 endif()
 ##### OQS_COPY_FROM_PQCLEAN_FRAGMENT_ADD_ALG_OBJECTS_END
-add_library(d2c ALIAS dilithium_2_clean)
-message($<TARGET_OBJECTS:dilithium_2_clean>)
 add_library(oqs
                 kem/kem.c
                 ${KEM_OBJS}
