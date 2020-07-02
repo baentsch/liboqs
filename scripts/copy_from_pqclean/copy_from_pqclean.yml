@@ -227,16 +227,19 @@ sigs:
       -
         scheme: "2"
         pqclean_scheme: dilithium2
+        upstream_location: DILITHIUM
         pretty_name_full: DILITHIUM_2
         signed_msg_order: sig_then_msg
       -
         scheme: "3"
         pqclean_scheme: dilithium3
+        upstream_location: DILITHIUM
         pretty_name_full: DILITHIUM_3
         signed_msg_order: sig_then_msg
       -
         scheme: "4"
         pqclean_scheme: dilithium4
+        upstream_location: DILITHIUM
         pretty_name_full: DILITHIUM_4
         signed_msg_order: sig_then_msg
   -

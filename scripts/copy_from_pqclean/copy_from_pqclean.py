@@ -10,6 +10,13 @@ import shutil
 import subprocess
 import yaml
 from pathlib import Path
+import sys
+
+# The higher the value the more is output
+if len(sys.argv)>1:
+   DEBUG=int(sys.argv[1])
+else:
+   DEBUG=0
 
 if 'PQCLEAN_DIR' not in os.environ:
     print("Must set environment variable PQCLEAN_DIR")
@@ -68,13 +75,34 @@ def load_instructions():
         family['pqclean_type'] = 'sign'
         family['family'] = family['name']
         for scheme in family['schemes']:
-            scheme['metadata'] = yaml.safe_load(file_get_contents(os.path.join(os.environ['PQCLEAN_DIR'], 'crypto_sign', scheme['pqclean_scheme'], 'META.yml')))
-            # This is a temporary hack to work around the fact that
-            # the PQClean's META.ymls for the Dilithium AVX2 variants
-            # are not properly specified.
-            if scheme['pretty_name_full'].startswith('DILITHIUM_'):
-                scheme['metadata']['implementations'][1]['supported_platforms'][0]['operating_systems'] = ['Linux']
-                scheme['metadata']['implementations'][1]['supported_platforms'][0]['required_flags'] = ['avx2', 'bmi', 'popcnt']
+            # check for presence of an upstream location:
+            try:
+              if 'upstream_location' in scheme:
+                if os.environ.get(scheme['upstream_location']):
+                  if os.path.isdir(os.environ.get(scheme['upstream_location'])):
+                    if DEBUG>0:
+                       print("Loading META-yml from %s" % (os.path.join(os.environ.get(scheme['upstream_location']), '{}_META.yml'.format(scheme['pretty_name_full']))))
+                    scheme['metadata'] = yaml.safe_load(file_get_contents(os.path.join(os.environ.get(scheme['upstream_location']), '{}_META.yml'.format(scheme['pretty_name_full']))))
+                  else:
+                    if DEBUG>0: 
+                       	print("upstream location '%s' set but not a directory in the local file system. Falling back to PQClean." % (scheme['upstream_location']))
+                    scheme.pop('upstream_location', None)
+                else:
+                  if DEBUG>0:
+                     print("upstream location '%s' set but not found in environment. Falling back to PQClean." % (scheme['upstream_location']))
+            except FileNotFoundError as fnf:
+              if DEBUG>0: 
+                 print("%s. Falling back to PQClean." %(fnf))
+              scheme.pop('upstream_location', None)
+              pass
+            if not 'metadata' in scheme:
+               scheme['metadata'] = yaml.safe_load(file_get_contents(os.path.join(os.environ['PQCLEAN_DIR'], 'crypto_sign', scheme['pqclean_scheme'], 'META.yml')))
+               # This is a temporary hack to work around the fact that
+               # the PQClean's META.ymls for the Dilithium AVX2 variants
+               # are not properly specified.
+               if scheme['pretty_name_full'].startswith('DILITHIUM_'):
+                   scheme['metadata']['implementations'][1]['supported_platforms'][0]['operating_systems'] = ['Linux']
+                   scheme['metadata']['implementations'][1]['supported_platforms'][0]['required_flags'] = ['avx2', 'bmi', 'popcnt']
 
             scheme['metadata']['euf_cma'] = 'true'
             scheme['pqclean_scheme_c'] = scheme['pqclean_scheme'].replace('-', '')
@@ -85,21 +113,65 @@ def load_instructions():
 # Copy over all files for a given impl in a family using scheme
 # Returns list of all relative source files
 def handle_implementation(impl, family, scheme):
+        # Obtain current implementation array in i
+        for imp in scheme['metadata']['implementations']:
+           if imp['name'] == impl:
+             i = imp
+        if DEBUG>2:
+           print("IMP = %s" %(i))
+        #if 'upstream_location' in scheme and os.environ.get(scheme['upstream_location']):
+        if DEBUG>3:
+           print("Obtain files for implementation %s" % (impl))
+           print("Obtain files for %s" % (scheme))
         shutil.rmtree(os.path.join('src', family['type'], family['name'], 'pqclean_{}_{}'.format(scheme['pqclean_scheme'], impl)), ignore_errors=True)
         srcfolder = os.path.join('src', family['type'], family['name'], 'pqclean_{}_{}'.format(scheme['pqclean_scheme'], impl))
-        subprocess.run([
-            'cp',
-            '-pr',
-            os.path.join(os.environ['PQCLEAN_DIR'], 'crypto_' + family['pqclean_type'], scheme['pqclean_scheme'], impl),
-            srcfolder
-        ])
+        if 'upstream_location' in scheme and os.environ.get(scheme['upstream_location']):
+           # Don't copy from PQClean straight but check for origfile list
+           try:
+              os.mkdir(srcfolder)
+           except FileExistsError as fee:
+              print(fee)
+              pass
+           # determine origin folder of (may be renamed via 'folder_name'):
+           if 'folder_name' in i:
+              of = i['folder_name']
+           else:
+              of = impl
+           origfolder = os.path.join(os.environ[scheme['upstream_location']], of)
+           # determine list of files to copy:
+           if 'sources' in i:
+              srcs = i['sources'].split(" ")
+              for s in srcs:
+                 # Copy recursively only in case of directories not with plain files to avoid copying over symbolic links
+                 if os.path.isfile(os.path.join(origfolder, s)):
+                    subprocess.run([ 'cp', os.path.join(origfolder, s), os.path.join(srcfolder, s) ])
+                 else:
+                    subprocess.run([ 'cp', '-r', os.path.join(origfolder, s), os.path.join(srcfolder, s) ])
+           else:
+              raise Exception("Malformed YML file: No sources listed to copy. Check upstream YML file." )
+           
+        else: # simple case: PQClean sourcefolder copy
+           origfolder = os.path.join(os.environ['PQCLEAN_DIR'], 'crypto_' + family['pqclean_type'], scheme['pqclean_scheme'], impl)
+           subprocess.run([ 'cp', '-pr', origfolder, srcfolder ])
+
         try:
             os.remove(os.path.join('src', family['type'], family['name'], 'pqclean_{}_{}'.format(scheme['pqclean_scheme'], impl), 'Makefile'))
             os.remove(os.path.join('src', family['type'], family['name'], 'pqclean_{}_{}'.format(scheme['pqclean_scheme'], impl), 'Makefile.Microsoft_nmake'))
         except FileNotFoundError:
            pass
         extensions = [ '.c', '.s' ]
-        return [str(x.relative_to(srcfolder)) for x in Path(srcfolder).iterdir() if x.suffix.lower() in extensions]
+        ffs = []
+        for subdir, dirs, files in os.walk(srcfolder):
+          for x in files:
+           for i in extensions:
+              if x.lower().endswith(i):
+                 fname = subdir + os.sep + x
+                 if DEBUG>2:
+                    print("srcfolder: %s - File: %s" % (srcfolder, fname))
+                 ffs.append(fname)
+        if DEBUG>2:
+          print(ffs)
+        return [x[len(srcfolder)+1:] for x in ffs]
 
 
 instructions = load_instructions()
@@ -113,6 +185,7 @@ for family in instructions['kems'] + instructions['sigs']:
         if 'implementation' in scheme:
             impl = scheme['implementation']
             srcs = handle_implementation(impl, family, scheme)
+            #print("SRCs found: %s" % (srcs))
             if (scheme['sources']):
                assert(len(scheme['sources']) == len(srcs))
             # in any case: add 'sources' to implementation(s)
@@ -123,6 +196,8 @@ for family in instructions['kems'] + instructions['sigs']:
             # If no scheme['implementation'] given, get the list from META.yml and add all implementations
            for impl in scheme['metadata']['implementations']:
                srcs = handle_implementation(impl['name'], family, scheme)
+               if DEBUG>2:
+                 print("SRCs found: %s" % (srcs))
                # in any case: add 'sources' to implementation(s)
                impl['sources'] = srcs
                # also add suitable defines:
