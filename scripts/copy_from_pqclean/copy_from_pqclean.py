@@ -57,6 +57,28 @@ def replacer(filename, instructions, delimiter):
         contents = preamble + identifier_start + jinja2.Template(template).render({'instructions': instructions}) + postamble
     file_put_contents(filename, contents)
 
+def upstream_check(scheme):
+    # check for presence of an upstream location and insert into scheme if found:
+    try:
+      if 'upstream_location' in scheme:
+        if os.environ.get(scheme['upstream_location']):
+          if os.path.isdir(os.environ.get(scheme['upstream_location'])):
+            if DEBUG>0:
+               print("Loading META-yml from %s" % (os.path.join(os.environ.get(scheme['upstream_location']), '{}_META.yml'.format(scheme['pretty_name_full']))))
+            scheme['metadata'] = yaml.safe_load(file_get_contents(os.path.join(os.environ.get(scheme['upstream_location']), '{}_META.yml'.format(scheme['pretty_name_full']))))
+          else:
+            if DEBUG>0:
+              print("upstream location '%s' set but not a directory in the local file system. Falling back to PQClean." % (scheme['upstream_location']))
+            scheme.pop('upstream_location', None)
+        else:
+          if DEBUG>0:
+             print("upstream location '%s' set but not found in environment. Falling back to PQClean." % (scheme['upstream_location']))
+    except FileNotFoundError as fnf:
+      if DEBUG>0:
+         print("%s. Falling back to PQClean." %(fnf))
+      scheme.pop('upstream_location', None)
+      pass
+
 def load_instructions():
     instructions = file_get_contents(os.path.join('scripts', 'copy_from_pqclean', 'copy_from_pqclean.yml'), encoding='utf-8')
     instructions = yaml.safe_load(instructions)
@@ -65,7 +87,9 @@ def load_instructions():
         family['pqclean_type'] = 'kem'
         family['family'] = family['name']
         for scheme in family['schemes']:
-            scheme['metadata'] = yaml.safe_load(file_get_contents(os.path.join(os.environ['PQCLEAN_DIR'], 'crypto_kem', scheme['pqclean_scheme'], 'META.yml')))
+            upstream_check(scheme)
+            if not 'metadata' in scheme:
+                scheme['metadata'] = yaml.safe_load(file_get_contents(os.path.join(os.environ['PQCLEAN_DIR'], 'crypto_kem', scheme['pqclean_scheme'], 'META.yml')))
             scheme['metadata']['ind_cca'] = 'true' if (scheme['metadata']['claimed-security'] == "IND-CCA2") else 'false'
             scheme['pqclean_scheme_c'] = scheme['pqclean_scheme'].replace('-', '')
             scheme['scheme_c'] = scheme['scheme'].replace('-', '')
@@ -75,26 +99,7 @@ def load_instructions():
         family['pqclean_type'] = 'sign'
         family['family'] = family['name']
         for scheme in family['schemes']:
-            # check for presence of an upstream location:
-            try:
-              if 'upstream_location' in scheme:
-                if os.environ.get(scheme['upstream_location']):
-                  if os.path.isdir(os.environ.get(scheme['upstream_location'])):
-                    if DEBUG>0:
-                       print("Loading META-yml from %s" % (os.path.join(os.environ.get(scheme['upstream_location']), '{}_META.yml'.format(scheme['pretty_name_full']))))
-                    scheme['metadata'] = yaml.safe_load(file_get_contents(os.path.join(os.environ.get(scheme['upstream_location']), '{}_META.yml'.format(scheme['pretty_name_full']))))
-                  else:
-                    if DEBUG>0: 
-                       	print("upstream location '%s' set but not a directory in the local file system. Falling back to PQClean." % (scheme['upstream_location']))
-                    scheme.pop('upstream_location', None)
-                else:
-                  if DEBUG>0:
-                     print("upstream location '%s' set but not found in environment. Falling back to PQClean." % (scheme['upstream_location']))
-            except FileNotFoundError as fnf:
-              if DEBUG>0: 
-                 print("%s. Falling back to PQClean." %(fnf))
-              scheme.pop('upstream_location', None)
-              pass
+            upstream_check(scheme)
             if not 'metadata' in scheme:
                scheme['metadata'] = yaml.safe_load(file_get_contents(os.path.join(os.environ['PQCLEAN_DIR'], 'crypto_sign', scheme['pqclean_scheme'], 'META.yml')))
                # This is a temporary hack to work around the fact that
