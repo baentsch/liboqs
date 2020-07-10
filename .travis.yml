@@ -1,5 +1,5 @@
 before_install:
-  - sudo apt-get install -y ninja-build python3-pytest
+  - sudo apt-get install -y ninja-build python3-pytest python3-pytest-xdist
 language: c
 os: linux
 dist: bionic
