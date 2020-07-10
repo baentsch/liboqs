@@ -2,7 +2,7 @@
 
 try_run(RUN_RESULT COMPILE_RESULT
         "${CMAKE_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/.CMake/detect_gcc_clang_intrinsics.c"
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64le")
+if(ARCH STREQUAL "ppc64le")
         COMPILE_DEFINITIONS -mcpu=native
 else()
         COMPILE_DEFINITIONS -march=native
