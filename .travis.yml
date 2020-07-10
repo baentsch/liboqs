@@ -1,3 +1,5 @@
+before_install:
+  - sudo apt-get -y ninja
 language: c
 os: linux
 dist: bionic
