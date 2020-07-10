@@ -5,7 +5,7 @@ try_run(RUN_RESULT COMPILE_RESULT
         COMPILE_DEFINITIONS -march=native
         RUN_OUTPUT_VARIABLE RUN_OUTPUT)
 if(NOT RUN_RESULT EQUAL 0)
-     message(FATAL_ERROR ".CMake/detect_gcc_clang_intrinsics.c returned exit code: " ${RUN_RESULT})
+     message(FATAL_ERROR ".CMake/detect_gcc_clang_intrinsics.c returned exit code/output: " ${RUN_RESULT} ${RUN_OUTPUT})
 endif()
 foreach(CPU_EXTENSION ${RUN_OUTPUT})
     set(OQS_USE_${CPU_EXTENSION}_INSTRUCTIONS ON)
