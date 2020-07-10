@@ -8,7 +8,7 @@ compiler:
   - clang
 arch:
   - amd64
-  - arm64
+#  - arm64
   - ppc64le
   - s390x
 script: ./scripts/travistest.sh
