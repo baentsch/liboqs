@@ -1,13 +1,16 @@
 # SPDX-License-Identifier: MIT
 
+if(ARCH STREQUAL "ppc64le")
 try_run(RUN_RESULT COMPILE_RESULT
         "${CMAKE_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/.CMake/detect_gcc_clang_intrinsics.c"
-if(ARCH STREQUAL "ppc64le")
         COMPILE_DEFINITIONS -mcpu=native
-else()
-        COMPILE_DEFINITIONS -march=native
-endif()
         RUN_OUTPUT_VARIABLE RUN_OUTPUT)
+else()
+try_run(RUN_RESULT COMPILE_RESULT
+        "${CMAKE_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/.CMake/detect_gcc_clang_intrinsics.c"
+        COMPILE_DEFINITIONS -march=native
+        RUN_OUTPUT_VARIABLE RUN_OUTPUT)
+endif()
 if(NOT RUN_RESULT EQUAL 0)
      message(FATAL_ERROR ".CMake/detect_gcc_clang_intrinsics.c returned exit code/output: " ${RUN_RESULT} ${RUN_OUTPUT})
 endif()
