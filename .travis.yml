@@ -1,5 +1,5 @@
 before_install:
-  - sudo apt-get -y ninja
+  - sudo apt-get -y ninjai-build
 language: c
 os: linux
 dist: bionic
