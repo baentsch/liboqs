@@ -1,0 +1,12 @@
+language: c
+os: linux
+dist: bionic
+compiler:
+  - gcc
+  - clang
+arch:
+  - amd64
+  - arm64
+  - ppc64le
+  - s390x
+script: ./scripts/travistest.sh
