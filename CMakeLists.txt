@@ -30,6 +30,7 @@ elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
     set(ARCH "arm")
 else()
     set(ARCH ${CMAKE_SYSTEM_PROCESSOR})
+    set(OQS_USE_CPU_EXTENSIONS OFF)
 #    message(FATAL_ERROR "Unknown or unsupported processor: " ${CMAKE_SYSTEM_PROCESSOR})
 endif()
 
